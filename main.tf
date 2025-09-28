@@ -52,7 +52,7 @@ module "alb" {
   name    = "web-alb"
   vpc_id  = module.web_vpc.vpc_id
   subnets = module.web_vpc.public_subnets
-  secuirty_groups = module.web_sg.security_group_id
+  secuirty_groups = [module.web_sg.security_group_id]
 
   target_groups = {
     ex-instance = {
