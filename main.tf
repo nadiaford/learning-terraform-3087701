@@ -97,7 +97,7 @@ module "alb" {
   }
 
   tags = {
-    Environment = "Development"
+    Environment = "Dev"
   }
 
 module "web_sg" {
