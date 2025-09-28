@@ -46,6 +46,29 @@ resource "aws_instance" "web" {
   }
 }
 
+module "alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  name    = "web-alb"
+  vpc_id  = module.web_vpc.vpc_id
+  subnets = module.web_vpc.public_subnets
+  secuirty_groups = module.web_sg.security_group_id
+
+  target_groups = {
+    ex-instance = {
+      name_prefix      = "web"
+      protocol         = "HTTP"
+      port             = 80
+      target_type      = "instance"
+      target_id        = "aws_instance.web.id"
+    }
+  }
+
+  tags = {
+    Environment = "dev"
+  }
+}
+
 module "web_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
