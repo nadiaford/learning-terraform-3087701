@@ -99,7 +99,6 @@ module "alb" {
   tags = {
     Environment = "Development"
   }
-}
 
 module "web_sg" {
   source  = "terraform-aws-modules/security-group/aws"
