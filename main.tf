@@ -50,37 +50,55 @@ module "alb" {
   source = "terraform-aws-modules/alb/aws"
 
   name    = "web-alb"
+  vpc_id  = module.web_vpc.vpc_id
+  subnets = module.web_vpc.public_subnets
+  security_groups = module.blog_sg.security_group_id
 
-  load_balancer_type = "application"
+  # Security Group
+  security_group_ingress_rules = {
+    all_http = {
+      from_port   = 80
+      to_port     = 80
+      ip_protocol = "tcp"
+      description = "HTTP web traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    all_https = {
+      from_port   = 443
+      to_port     = 443
+      ip_protocol = "tcp"
+      description = "HTTPS web traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+  security_group_egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "10.0.0.0/16"
+    }
+  }
 
-  vpc_id          = module.web_vpc.vpc_id
-  subnets         = module.web_vpc.public_subnets
-  security_groups = [module.web_sg.security_group_id]
-
-  target_groups = [
-    {
-      name_prefix      = "web-"
-      backend_protocol = "HTTP"
-      backend_port     = 80
-      target_type      = "instance"
-      targets = {
-        my_targets = {
-          target_id = aws_instance.web.id
-        }
+  listeners = {
+    ex-http = {
+      port     = 80
+      protocol = "HTTP"
+      
       }
     }
-  ]
+  
 
-  listeners = [
-    {
-      port = 80
-      protocol = "HTTP"
-      target_group_index = 0
+  target_groups = {
+      name_prefix      = "web-"
+      protocol         = "HTTP"
+      port             = 80
+      target_type      = "instance"
+      target_id        = aws_instance.web.id
     }
-  ]
+  }
 
   tags = {
-    Environment = "dev"
+    Environment = "Development"
+    Project     = "Example"
   }
 }
 
