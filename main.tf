@@ -66,8 +66,10 @@ module "alb" {
       name_prefix      = "web-"
       protocol         = "HTTP"
       port             = 80
-    
-      target_id        = aws_instance.web.id
+      my_target = {
+       target_type      = "instance"
+      target_id        = aws_instance.web.id 
+      }
     }
   
 
