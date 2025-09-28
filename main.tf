@@ -69,10 +69,11 @@ module "alb" {
       target_type      = "instance"
       target_id        = aws_instance.web.id
     }
-  }
+  
 
   tags = {
     Environment = "Dev"
+  }
   }
 
 module "web_sg" {
