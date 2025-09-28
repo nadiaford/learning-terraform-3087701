@@ -63,7 +63,7 @@ module "alb" {
   
 
   target_groups = {
-      name_prefix      = "web-"
+      name_prefix      = "web"
       protocol         = "HTTP"
       port             = 80
       my_target = {
